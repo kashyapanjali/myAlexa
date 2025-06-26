@@ -1,3 +1,4 @@
+
 import speech_recognition as sr
 import pyttsx3
 import pywhatkit
@@ -10,55 +11,59 @@ engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 
-
-
 def talk(text):
     engine.say(text)
     engine.runAndWait()
 
-
 def take_command():
     try:
         with sr.Microphone() as source:
-            print('listening...')
+            print("Listening...")
             voice = listener.listen(source)
             command = listener.recognize_google(voice)
             command = command.lower()
-            if 'anjali' in command:
-                command = command.replace('anjali', '')
-                print(command)
-    except: 
-        pass 
-    return command      
+            if "anjali" in command:
+                command = command.replace("anjali", "")
+                return command
+    except:
+        return ""
+    return ""
 
 def run_anjali():
     command = take_command()
-    print(command)
-    if 'play' in command:
-        song = command.replace('play','')
-        talk('playing' + song)
+    if not command:
+        return "Sorry, I didn't catch that."
+
+    if "play" in command:
+        song = command.replace("play", "")
+        talk(f"Playing {song}")
         pywhatkit.playonyt(song)
+        return f"Playing {song}"
 
-    elif 'time' in command:
-        time = datetime.datetime.now().strftime('%I:%M %p')
-        print(time)
-        talk('Current time is' + time)
+    elif "time" in command:
+        time = datetime.datetime.now().strftime("%I:%M %p")
+        talk("Current time is " + time)
+        return f"The current time is {time}"
 
-    elif 'who the heck is' in command:
-        person = command.replace('who the heck is', '')
+    elif "who is" in command:
+        person = command.replace("who is", "")
         info = wikipedia.summary(person, 1)
-        print(info)
         talk(info)
-    elif 'date' in command:
-        talk('sorry, I have a headache')  
-    elif 'are you single' in command:
-        talk('I am in a relationship with best') 
-    elif 'joke' in command:
-        talk(pyjokes.get_joke)
-        print(pyjokes) 
-    else:
-        talk('Please say the command again.')
-   
+        return info
 
-while True:
-    run_anjali()        
+    elif "joke" in command:
+        joke = pyjokes.get_joke()
+        talk(joke)
+        return joke
+
+    elif "date" in command:
+        talk("Sorry, I have a headache")
+        return "Sorry, I have a headache"
+
+    elif "are you single" in command:
+        talk("I'm in a relationship with Python")
+        return "I'm in a relationship with Python"
+
+    else:
+        talk("Please say the command again.")
+        return "Please say the command again."

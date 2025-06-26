@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anjali Assistant</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8">
+  <title>Anjali AI</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div class="mic-container">
-    <div class="mic-glow"></div>
-    <button id="mic-btn">🎙️ Ask Anjali</button>
+  <div class="container">
+    <h1>Ask Anjali 💬</h1>
+    <button id="mic-btn">🎤</button>
+    <div id="response-text"></div>
   </div>
-  <h2 id="response-text"></h2>
 
-  <script src="/static/script.js"></script>
+  <script>
+    const mic = document.getElementById("mic");
+    const questionEl = document.getElementById("question");
+    const answerEl = document.getElementById("answer");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    mic.addEventListener("click", () => {
+      recognition.start();
+    });
+
+    recognition.onresult = async (event) => {
+      const speechToText = event.results[0][0].transcript;
+      questionEl.innerText = "You asked: " + speechToText;
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: speechToText })
+      });
+      const data = await res.json();
+      answerEl.innerText = "Anjali says: " + data.answer;
+
+      const speech = new SpeechSynthesisUtterance(data.answer);
+      speech.lang = "en";
+      window.speechSynthesis.speak(speech);
+    };
+  </script>
 </body>
 </html>

@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Anjali AI</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <title>Ask Anjali 💬</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
     <h1>Ask Anjali 💬</h1>
-    <button id="mic-btn">🎤</button>
-    <div id="response-text"></div>
+    <div class="circle" id="mic-btn">🎤</div>
+    <div id="response-text">Click the mic and ask something!</div>
   </div>
 
   <script>
-    const mic = document.getElementById("mic");
-    const questionEl = document.getElementById("question");
-    const answerEl = document.getElementById("answer");
+    const micBtn = document.getElementById("mic-btn");
+    const responseText = document.getElementById("response-text");
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "en-US";
 
-    mic.addEventListener("click", () => {
+    micBtn.addEventListener("click", () => {
       recognition.start();
+      responseText.innerText = "Listening...";
     });
 
     recognition.onresult = async (event) => {
-      const speechToText = event.results[0][0].transcript;
-      questionEl.innerText = "You asked: " + speechToText;
+      const question = event.results[0][0].transcript;
+      responseText.innerText = `You asked: "${question}"`;
 
       const res = await fetch("/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: speechToText })
+        body: JSON.stringify({ question })
       });
-      const data = await res.json();
-      answerEl.innerText = "Anjali says: " + data.answer;
 
-      const speech = new SpeechSynthesisUtterance(data.answer);
-      speech.lang = "en";
-      window.speechSynthesis.speak(speech);
+      const data = await res.json();
+      responseText.innerText = `Anjali says: "${data.answer}"`;
+
+      const utterance = new SpeechSynthesisUtterance(data.answer);
+      window.speechSynthesis.speak(utterance);
     };
   </script>
 </body>

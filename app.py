@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import datetime
-
+import os
 
 app = Flask(__name__)
 
@@ -47,7 +47,7 @@ def ask():
     
     elif "play" in question:
         song = question.replace("play", "").strip()
-        return jsonify({'answer': f"Sure! You can listen to '{song}' on YouTube."})
+        return jsonify({'answer': f"Sure! You can listen to '{song}' on YouTube: https://www.youtube.com/results?search_query={song.replace(' ', '+')}"})
     
     elif "reminder" in question:
         return jsonify({'answer': "I can't store reminders yet, but I'm learning quickly!"})
@@ -59,18 +59,17 @@ def ask():
         return jsonify({'answer': "You're welcome!"})
     
     elif "open google" in question:
-        return jsonify({'answer': "You can visit https://www.google.com."})
-    
+        return jsonify({'answer': "Here’s Google: https://www.google.com"})
+
     elif "open youtube" in question:
-        pywhatkit.playonyt("YouTube")
-        return jsonify({'answer': "Opening YouTube."})
-    
+        return jsonify({'answer': "Here’s YouTube: https://www.youtube.com"})
+
     elif "open linkedin" in question:
-        pywhatkit.search("Linkedin")
-        return jsonify({'answer': "Opening LinkedIn."})
+        return jsonify({'answer': "Here’s LinkedIn: https://www.linkedin.com"})
     
     else:
         return jsonify({'answer': "Sorry, I didn't understand that. Try asking something like 'what's the time' or 'play a song'."})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)

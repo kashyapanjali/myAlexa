@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import datetime
-import pywhatkit
+
 
 app = Flask(__name__)
 
@@ -47,8 +47,7 @@ def ask():
     
     elif "play" in question:
         song = question.replace("play", "").strip()
-        pywhatkit.playonyt(song)
-        return jsonify({'answer': f"Playing {song} on YouTube."})
+        return jsonify({'answer': f"Sure! You can listen to '{song}' on YouTube."})
     
     elif "reminder" in question:
         return jsonify({'answer': "I can't store reminders yet, but I'm learning quickly!"})
@@ -60,8 +59,7 @@ def ask():
         return jsonify({'answer': "You're welcome!"})
     
     elif "open google" in question:
-        pywhatkit.search("Google")
-        return jsonify({'answer': "Opening Google."})
+        return jsonify({'answer': "You can visit https://www.google.com."})
     
     elif "open youtube" in question:
         pywhatkit.playonyt("YouTube")

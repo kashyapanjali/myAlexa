@@ -12,34 +12,6 @@
     <div id="response-text">Click the mic and ask something!</div>
   </div>
 
-  <script>
-    const micBtn = document.getElementById("mic-btn");
-    const responseText = document.getElementById("response-text");
-
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = "en-US";
-
-    micBtn.addEventListener("click", () => {
-      recognition.start();
-      responseText.innerText = "Listening...";
-    });
-
-    recognition.onresult = async (event) => {
-      const question = event.results[0][0].transcript;
-      responseText.innerText = `You asked: "${question}"`;
-
-      const res = await fetch("/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question })
-      });
-
-      const data = await res.json();
-      responseText.innerText = `Anjali says: "${data.answer}"`;
-
-      const utterance = new SpeechSynthesisUtterance(data.answer);
-      window.speechSynthesis.speak(utterance);
-    };
-  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

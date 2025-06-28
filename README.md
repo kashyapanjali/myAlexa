@@ -4,11 +4,11 @@ A web-based voice assistant that uses speech recognition and OpenAI's GPT to ans
 
 ## Features
 
-- 🎤 Voice input using browser's Speech Recognition API
-- 🤖 AI-powered responses using OpenAI GPT-3.5-turbo
-- 🔊 Text-to-speech output using browser's Speech Synthesis API
-- 💻 Web-based interface - no installation required
-- 🎨 Modern, responsive UI
+- Voice input using browser's Speech Recognition API
+- AI-powered responses using OpenAI GPT-3.5-turbo
+- Text-to-speech output using browser's Speech Synthesis API
+- Web-based interface - no installation required
+- Modern, responsive UI
 
 ## Setup
 
